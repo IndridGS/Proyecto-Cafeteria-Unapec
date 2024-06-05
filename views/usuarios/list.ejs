@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuarios</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li>
+                    <a href="#">Gestión</a>
+                    <ul class="submenu">
+                        <li><a href="/campus">Campus</a></li>
+                        <li><a href="/cafeterias">Cafeterías</a></li>
+                        <li><a href="/tipos-usuarios">Tipos de Usuarios</a></li>
+                        <li><a href="/proveedores">Proveedores</a></li>
+                        <li><a href="/marcas">Marcas</a></li>
+                        <li><a href="/usuarios">Usuarios</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Lista de Usuarios</h2>
+        <a href="/usuarios/add" class="button">Añadir Usuario</a>
+        <table>
+            <thead>
+                <tr>
+                    <th>Identificador</th>
+                    <th>Nombre</th>
+                    <th>Cédula</th>
+                    <th>Tipo de Usuario</th>
+                    <th>Límite de Crédito</th>
+                    <th>Fecha de Registro</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% usuarios.forEach(usuario => { %>
+                    <tr>
+                        <td><%= usuario.id %></td>
+                        <td><%= usuario.nombre %></td>
+                        <td><%= usuario.cedula %></td>
+                        <td><%= usuario.tipo_usuario %></td>
+                        <td><%= usuario.limite_credito %></td>
+                        <td><%= usuario.fecha_registro %></td>
+                        <td><%= usuario.state %></td>
+                        <td>
+                            <a href="/usuarios/edit/<%= usuario.id %>">Editar</a>
+                            <a href="/usuarios/delete/<%= usuario.id %>" style="color: red;">Eliminar</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+</body>
+</html>

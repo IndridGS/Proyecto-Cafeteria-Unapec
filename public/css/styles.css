@@ -1,0 +1,136 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #343a40;
+    color: #fff;
+    padding: 10px 10px;  /* Reducir padding para hacer la barra de navegación más delgada */
+    text-align: center;
+}
+
+nav ul.menu-principal {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}
+
+nav ul.menu-principal li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav ul.menu-principal li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+nav ul.menu-principal li:hover {
+    background-color: #495057;
+}
+
+nav ul.menu-principal li ul.submenu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    padding: 10px;
+    z-index: 100;
+}
+
+nav ul.menu-principal li ul.submenu li {
+    display: block;
+    white-space: nowrap;
+}
+
+nav ul.menu-principal li ul.submenu li a {
+    color: #333;
+    display: block;
+    padding: 10px;
+}
+
+nav ul.menu-principal li ul.submenu li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Estilos para el contenido principal */
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+h2.welcome-text {
+    font-size: 2em;  /* Aumentar tamaño de fuente */
+    margin-bottom: 20px;
+}
+
+/* Estilos para enlaces con clase button */
+a.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+a.button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #343a40;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Estilos del footer */
+footer {
+    background-color: #343a40;
+    color: #fff;
+    text-align: center;
+    padding: -5px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Estilos para mensajes de error */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}

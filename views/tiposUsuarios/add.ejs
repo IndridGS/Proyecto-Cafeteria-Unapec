@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Tipo de Usuario</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-container input[type="text"],
+        .form-container select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-container button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            border: none;
+        }
+
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li><a href="/campus">Gestión de Campus</a></li>
+                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
+                <li><a href="/tipos-usuarios">Gestión de Tipos de Usuarios</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="form-container">
+            <h2>Añadir Tipo de Usuario</h2>
+            <form action="/tipos-usuarios/add" method="post">
+                <label for="description">Descripción:</label>
+                <input type="text" id="description" name="description" required>
+                <label for="state">Estado:</label>
+                <select id="state" name="state" required>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+                <button type="submit" class="button">Guardar</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Empleado</title>
+    <link rel="stylesheet" href="/css/empleado.css">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li><a href="/campus">Gestión de Campus</a></li>
+                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
+                <li><a href="/tipos-usuarios">Gestión de Tipos de Usuarios</a></li>
+                <li><a href="/marcas">Gestión de Marcas</a></li>
+                <li><a href="/usuarios">Gestión de Usuarios</a></li>
+                <li><a href="/empleados">Gestión de Empleados</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Editar Empleado</h2>
+        <form id="editEmpleadoForm" action="/empleados/edit/<%= empleado.id %>" method="post">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" value="<%= empleado.nombre %>" required>
+                <div class="error-message" id="nombre-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="cedula">Cédula:</label>
+                <input type="text" id="cedula" name="cedula" value="<%= empleado.cedula %>" required>
+                <div class="error-message" id="cedula-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="tanda_labor">Tanda Labor:</label>
+                <select id="tanda_labor" name="tanda_labor" required>
+                    <option value="Matutina" <%= empleado.tanda_labor === 'Matutina' ? 'selected' : '' %>>Matutina</option>
+                    <option value="Vespertina" <%= empleado.tanda_labor === 'Vespertina' ? 'selected' : '' %>>Vespertina</option>
+                    <option value="Nocturna" <%= empleado.tanda_labor === 'Nocturna' ? 'selected' : '' %>>Nocturna</option>
+                </select>
+                <div class="error-message" id="tanda_labor-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="porciento_comision">Porciento Comisión:</label>
+                <input type="number" id="porciento_comision" name="porciento_comision" step="0.01" value="<%= empleado.porciento_comision %>" required>
+                <div class="error-message" id="porciento_comision-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="fecha_ingreso">Fecha Ingreso:</label>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" value="<%= empleado.fecha_ingreso %>" required>
+                <div class="error-message" id="fecha_ingreso-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="state">Estado:</label>
+                <select id="state" name="state" required>
+                    <option value="Activo" <%= empleado.state === 'Activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="Inactivo" <%= empleado.state === 'Inactivo' ? 'selected' : '' %>>Inactivo</option>
+                </select>
+                <div class="error-message" id="state-error"></div>
+            </div>
+            <button type="submit" class="button">Guardar</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('editEmpleadoForm');
+            const nombreInput = document.getElementById('nombre');
+            const cedulaInput = document.getElementById('cedula');
+            const comisionInput = document.getElementById('porciento_comision');
+
+            form.addEventListener('submit', function (event) {
+                let isValid = true;
+
+                // Validar nombre (solo letras)
+                if (!/^[a-zA-Z\s]+$/.test(nombreInput.value)) {
+                    showError('nombre', 'El nombre solo debe contener letras');
+                    isValid = false;
+                } else {
+                    clearError('nombre');
+                }
+
+                // Validar cédula (formato específico)
+                if (!/^\d{3}-\d{7}-\d{1}$/.test(cedulaInput.value)) {
+                    showError('cedula', 'La cédula debe tener el formato 000-0000000-0');
+                    isValid = false;
+                } else {
+                    clearError('cedula');
+                }
+
+                // Validar comisión (solo números positivos)
+                if (comisionInput.value <= 0 || isNaN(comisionInput.value)) {
+                    showError('porciento_comision', 'El porciento de comisión debe ser un número positivo');
+                    isValid = false;
+                } else {
+                    clearError('porciento_comision');
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+
+            function showError(inputId, message) {
+                const errorElement = document.getElementById(`${inputId}-error`);
+                errorElement.textContent = message;
+            }
+
+            function clearError(inputId) {
+                const errorElement = document.getElementById(`${inputId}-error`);
+                errorElement.textContent = '';
+            }
+        });
+    </script>
+</body>
+</html>

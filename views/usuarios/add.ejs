@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Usuario</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/add-usuario.css">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li>
+                    <a href="#">Gestión</a>
+                    <ul class="submenu">
+                        <li><a href="/campus">Campus</a></li>
+                        <li><a href="/cafeterias">Cafeterías</a></li>
+                        <li><a href="/tipos-usuarios">Tipos de Usuarios</a></li>
+                        <li><a href="/proveedores">Proveedores</a></li>
+                        <li><a href="/marcas">Marcas</a></li>
+                        <li><a href="/usuarios">Usuarios</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Añadir Usuario</h2>
+        <form id="addUserForm" action="/usuarios/add" method="post">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            <span id="nombreError" class="error-message"></span>
+            
+            <label for="cedula">Cédula:</label>
+            <input type="text" id="cedula" name="cedula" required>
+            <span id="cedulaError" class="error-message"></span>
+            
+            <label for="tipo_usuario_id">Tipo de Usuario:</label>
+            <select id="tipo_usuario_id" name="tipo_usuario_id" required>
+                <% tiposUsuarios.forEach(tipo => { %>
+                    <option value="<%= tipo.id %>"><%= tipo.description %></option>
+                <% }) %>
+            </select>
+            <span id="tipoUsuarioError" class="error-message"></span>
+            
+            <label for="limite_credito">Límite de Crédito:</label>
+            <input type="number" id="limite_credito" name="limite_credito" required>
+            <span id="limiteCreditoError" class="error-message"></span>
+            
+            <label for="fecha_registro">Fecha de Registro:</label>
+            <input type="date" id="fecha_registro" name="fecha_registro" value="<%= new Date().toISOString().split('T')[0] %>" readonly required>
+            
+            <label for="state">Estado:</label>
+            <select id="state" name="state" required>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+            <button type="submit" class="button">Guardar</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+    <script>
+        document.getElementById('addUserForm').addEventListener('submit', function(event) {
+            const nombre = document.getElementById('nombre').value;
+            const cedula = document.getElementById('cedula').value;
+            const tipoUsuarioId = document.getElementById('tipo_usuario_id').value;
+            const limiteCredito = document.getElementById('limite_credito').value;
+            const state = document.getElementById('state').value;
+            
+            let isValid = true;
+            
+            if (!/^[a-zA-Z\s]+$/.test(nombre)) {
+                document.getElementById('nombreError').textContent = 'Nombre inválido, solo se permiten letras y espacios';
+                isValid = false;
+            } else {
+                document.getElementById('nombreError').textContent = '';
+            }
+            
+            if (!/^\d{3}-\d{7}-\d{1}$/.test(cedula)) {
+                document.getElementById('cedulaError').textContent = 'Cédula inválida, debe seguir el formato 000-0000000-0';
+                isValid = false;
+            } else {
+                document.getElementById('cedulaError').textContent = '';
+            }
+            
+            if (tipoUsuarioId == null || tipoUsuarioId === '' || document.querySelector(`#tipo_usuario_id option[value="${tipoUsuarioId}"]`).textContent === 'Inactivo') {
+                document.getElementById('tipoUsuarioError').textContent = 'El tipo de usuario seleccionado está inactivo';
+                isValid = false;
+            } else {
+                document.getElementById('tipoUsuarioError').textContent = '';
+            }
+            
+            if (parseFloat(limiteCredito) <= 0) {
+                document.getElementById('limiteCreditoError').textContent = 'El límite de crédito debe ser un número positivo';
+                isValid = false;
+            } else {
+                document.getElementById('limiteCreditoError').textContent = '';
+            }
+            
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

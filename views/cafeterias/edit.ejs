@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Cafetería</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/edit.css">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li><a href="/campus">Gestión de Campus</a></li>
+                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="form-container">
+            <h2>Editar Cafetería</h2>
+            <form action="/cafeterias/edit/<%= cafeteria.id %>" method="post">
+                <div class="form-group">
+                    <label for="description">Descripción:</label>
+                    <input type="text" id="description" name="description" value="<%= cafeteria.description %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="campus_id">Campus:</label>
+                    <select id="campus_id" name="campus_id" required>
+                        <% campuses.forEach(campus => { %>
+                            <option value="<%= campus.id %>" <%= campus.id === cafeteria.campus_id ? 'selected' : '' %>><%= campus.description %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="encargado">Encargado:</label>
+                    <input type="text" id="encargado" name="encargado" value="<%= cafeteria.encargado %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">Estado:</label>
+                    <input type="text" id="state" name="state" value="<%= cafeteria.state %>" required>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Guardar">
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+</body>
+</html>
+

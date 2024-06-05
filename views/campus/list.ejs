@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Campus</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li><a href="/campus">Gestión de Campus</a></li>
+                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
+            
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Lista de Campus</h2>
+        <a href="/campus/add" class="button">Añadir Campus</a>
+        <table>
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% campuses.forEach(campus => { %>
+                    <tr>
+                        <td><%= campus.description %></td>
+                        <td><%= campus.state %></td>
+                        <td>
+                            <a href="/campus/edit/<%= campus.id %>">Editar</a>
+                            <a href="/campus/delete/<%= campus.id %>" style="color: red;">Eliminar</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+</body>
+</html>
+

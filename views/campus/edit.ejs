@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Campus</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/campus.css">
+    <style>
+        /* Estilos adicionales para el menú desplegable y el botón */
+        #state {
+            font-size: 1.2em;
+            padding: 0.5em;
+        }
+        .button {
+            font-size: 1.2em;
+            padding: 0.5em 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li><a href="/campus">Gestión de Campus</a></li>
+                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Editar Campus</h2>
+        <form action="/campus/edit/<%= campus.id %>" method="post">
+            <label for="description">Descripción:</label>
+            <input type="text" id="description" name="description" value="<%= campus.description %>" required>
+            
+            <label for="state">Estado:</label>
+            <select id="state" name="state" required>
+                <option value="Activo" <%= campus.state === 'Activo' ? 'selected' : '' %>>Activo</option>
+                <option value="Inactivo" <%= campus.state === 'Inactivo' ? 'selected' : '' %>>Inactivo</option>
+            </select>
+
+            <button type="submit" class="button">Guardar</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Proveedores</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/proveedores.css">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li><a href="/campus">Gestión de Campus</a></li>
+                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
+                <li><a href="/tipos-usuarios">Gestión de Tipos de Usuarios</a></li>
+                <li><a href="/proveedores">Gestión de Proveedores</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Lista de Proveedores</h2>
+        <a href="/proveedores/add" class="button">Añadir Proveedor</a>
+        <table>
+            <thead>
+                <tr>
+                    <th>Identificador</th>
+                    <th>Nombre Comercial</th>
+                    <th>RNC</th>
+                    <th>Fecha Registro</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% proveedores.forEach(proveedor => { %>
+                    <tr>
+                        <td><%= proveedor.id %></td>
+                        <td><%= proveedor.nombre_comercial %></td>
+                        <td><%= proveedor.rnc %></td>
+                        <td><%= proveedor.fecha_registro %></td>
+                        <td><%= proveedor.state %></td>
+                        <td>
+                            <a href="/proveedores/edit/<%= proveedor.id %>">Editar</a>
+                            <a href="/proveedores/delete/<%= proveedor.id %>">Eliminar</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+</body>
+</html>

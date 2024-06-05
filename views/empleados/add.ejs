@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Empleado</title>
+    <link rel="stylesheet" href="/css/empleado.css">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li><a href="/campus">Gestión de Campus</a></li>
+                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
+                <li><a href="/tipos-usuarios">Gestión de Tipos de Usuarios</a></li>
+                <li><a href="/marcas">Gestión de Marcas</a></li>
+                <li><a href="/usuarios">Gestión de Usuarios</a></li>
+                <li><a href="/empleados">Gestión de Empleados</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Añadir Empleado</h2>
+        <form action="/empleados/add" method="post">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="cedula">Cédula:</label>
+                <input type="text" id="cedula" name="cedula" required>
+            </div>
+            <div class="form-group">
+                <label for="tanda_labor">Tanda Labor:</label>
+                <select id="tanda_labor" name="tanda_labor" required>
+                    <option value="Matutina">Matutina</option>
+                    <option value="Vespertina">Vespertina</option>
+                    <option value="Nocturna">Nocturna</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="porciento_comision">Porciento Comisión:</label>
+                <input type="number" id="porciento_comision" name="porciento_comision" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha_ingreso">Fecha Ingreso:</label>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" required>
+            </div>
+            <div class="form-group">
+                <label for="state">Estado:</label>
+                <select id="state" name="state" required>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+            </div>
+            <button type="submit" class="button">Guardar</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+    <!-- Validaciones -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const nombreInput = document.getElementById('nombre');
+            const cedulaInput = document.getElementById('cedula');
+            const comisionInput = document.getElementById('porciento_comision');
+
+            form.addEventListener('submit', function (event) {
+                let isValid = true;
+
+                // Validar nombre (solo letras)
+                if (!/^[a-zA-Z\s]+$/.test(nombreInput.value)) {
+                    showError(nombreInput, 'El nombre solo debe contener letras');
+                    isValid = false;
+                } else {
+                    clearError(nombreInput);
+                }
+
+                // Validar cédula (formato específico)
+                if (!/^\d{3}-\d{7}-\d{1}$/.test(cedulaInput.value)) {
+                    showError(cedulaInput, 'La cédula debe tener el formato 000-0000000-0');
+                    isValid = false;
+                } else {
+                    clearError(cedulaInput);
+                }
+
+                // Validar comisión (solo números positivos)
+                if (comisionInput.value <= 0 || isNaN(comisionInput.value)) {
+                    showError(comisionInput, 'El porciento de comisión debe ser un número positivo');
+                    isValid = false;
+                } else {
+                    clearError(comisionInput);
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+
+            function showError(input, message) {
+                let error = input.nextElementSibling;
+                if (!error || !error.classList.contains('error-message')) {
+                    error = document.createElement('div');
+                    error.classList.add('error-message');
+                    input.parentNode.insertBefore(error, input.nextSibling);
+                }
+                error.textContent = message;
+            }
+
+            function clearError(input) {
+                let error = input.nextElementSibling;
+                if (error && error.classList.contains('error-message')) {
+                    error.remove();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

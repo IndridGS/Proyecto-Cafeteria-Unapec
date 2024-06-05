@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Artículo</title>
+    <link rel="stylesheet" href="/css/articulos.css">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Cafetería UNAPEC</h1>
+        <nav>
+            <ul class="menu-principal">
+                <li><a href="/">Inicio</a></li>
+                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
+                <li><a href="/campus">Gestión de Campus</a></li>
+                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
+                <li><a href="/tipos-usuarios">Gestión de Tipos de Usuarios</a></li>
+                <li><a href="/marcas">Gestión de Marcas</a></li>
+                <li><a href="/usuarios">Gestión de Usuarios</a></li>
+                <li><a href="/empleados">Gestión de Empleados</a></li>
+                <li><a href="/articulos">Gestión de Artículos</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Editar Artículo</h2>
+        <form id="editForm" action="/articulos/edit/<%= articulo.id %>" method="post" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="description">Descripción:</label>
+                <input type="text" id="description" name="description" value="<%= articulo.description %>" required>
+                <div class="error-message" id="descriptionError"></div>
+            </div>
+            <div class="form-group">
+                <label for="marca_id">Marca:</label>
+                <select id="marca_id" name="marca_id" required>
+                    <% marcas.forEach(function(marca) { %>
+                        <option value="<%= marca.id %>" <%= articulo.marca_id == marca.id ? 'selected' : '' %>><%= marca.description %></option>
+                    <% }); %>
+                </select>
+                <div class="error-message" id="marcaError"></div>
+            </div>
+            <div class="form-group">
+                <label for="costo">Costo:</label>
+                <input type="number" step="0.01" id="costo" name="costo" value="<%= articulo.costo %>" required>
+                <div class="error-message" id="costoError"></div>
+            </div>
+            <div class="form-group">
+                <label for="proveedor_id">Proveedor:</label>
+                <select id="proveedor_id" name="proveedor_id" required>
+                    <% proveedores.forEach(function(proveedor) { %>
+                        <option value="<%= proveedor.id %>" <%= articulo.proveedor_id == proveedor.id ? 'selected' : '' %>><%= proveedor.nombre_comercial %></option>
+                    <% }); %>
+                </select>
+                <div class="error-message" id="proveedorError"></div>
+            </div>
+            <div class="form-group">
+                <label for="existencia">Existencia:</label>
+                <input type="number" id="existencia" name="existencia" value="<%= articulo.existencia %>" min="0" required>
+                <div class="error-message" id="existenciaError"></div>
+            </div>
+            <div class="form-group">
+                <label for="state">Estado:</label>
+                <select id="state" name="state" required>
+                    <option value="Disponible" <%= articulo.state == 'Disponible' ? 'selected' : '' %>>Disponible</option>
+                    <option value="No Disponible" <%= articulo.state == 'No Disponible' ? 'selected' : '' %>>No Disponible</option>
+                </select>
+                <div class="error-message" id="stateError"></div>
+            </div>
+            <button type="submit" class="button">Guardar</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
+    </footer>
+    <script>
+        function validateForm() {
+            var isValid = true;
+            var costo = document.getElementById('costo').value;
+            var costoError = document.getElementById('costoError');
+
+            if (costo < 0) {
+                costoError.textContent = 'El costo debe ser un número positivo.';
+                isValid = false;
+            } else {
+                costoError.textContent = '';
+            }
+
+            return isValid;
+        }
+    </script>
+</body>
+</html>
+
