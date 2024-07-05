@@ -1,6 +1,6 @@
-// controllers/proveedorController.js
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db/cafeteria.db');
+const { validarRNC } = require('../utils/validations');
 
 // Mostrar la lista de proveedores
 exports.listProveedores = (req, res) => {
@@ -17,23 +17,42 @@ exports.listProveedores = (req, res) => {
 
 // Mostrar el formulario para añadir un nuevo proveedor
 exports.showAddProveedorForm = (req, res) => {
-    res.render('proveedores/add');
+    res.render('proveedores/add', { proveedor: {}, rncError: null });
 };
 
 // Añadir un nuevo proveedor
 exports.addProveedor = (req, res) => {
     const { nombre_comercial, rnc, fecha_registro, state } = req.body;
-    if (!/^\d{9}$/.test(rnc)) {
-        res.status(400).send('RNC inválido, debe contener 9 números');
-        return;
+
+    // Validar RNC
+    if (!validarRNC(rnc)) {
+        return res.render('proveedores/add', {
+            proveedor: { nombre_comercial, rnc, fecha_registro, state },
+            rncError: 'RNC inválido'
+        });
     }
-    const query = 'INSERT INTO Proveedores (nombre_comercial, rnc, fecha_registro, state) VALUES (?, ?, ?, ?)';
-    db.run(query, [nombre_comercial, rnc, fecha_registro, state], function (err) {
+
+    // Verificar si el RNC ya existe
+    const checkQuery = 'SELECT * FROM Proveedores WHERE rnc = ?';
+    db.get(checkQuery, [rnc], (err, row) => {
         if (err) {
             console.error(err.message);
-            res.status(500).send('Error al añadir el proveedor');
+            res.status(500).send('Error al verificar el RNC');
+        } else if (row) {
+            return res.render('proveedores/add', {
+                proveedor: { nombre_comercial, rnc, fecha_registro, state },
+                rncError: 'El RNC ya existe'
+            });
         } else {
-            res.redirect('/proveedores');
+            const query = 'INSERT INTO Proveedores (nombre_comercial, rnc, fecha_registro, state) VALUES (?, ?, ?, ?)';
+            db.run(query, [nombre_comercial, rnc, fecha_registro, state], function (err) {
+                if (err) {
+                    console.error(err.message);
+                    res.status(500).send('Error al añadir el proveedor');
+                } else {
+                    res.redirect('/proveedores');
+                }
+            });
         }
     });
 };
@@ -48,7 +67,7 @@ exports.showEditProveedorForm = (req, res) => {
         } else if (!row) {
             res.status(404).send('Proveedor no encontrado');
         } else {
-            res.render('proveedores/edit', { proveedor: row });
+            res.render('proveedores/edit', { proveedor: row, rncError: null });
         }
     });
 };
@@ -56,17 +75,36 @@ exports.showEditProveedorForm = (req, res) => {
 // Editar un proveedor existente
 exports.editProveedor = (req, res) => {
     const { nombre_comercial, rnc, fecha_registro, state } = req.body;
-    if (!/^\d{9}$/.test(rnc)) {
-        res.status(400).send('RNC inválido, debe contener 9 números');
-        return;
+
+    // Validar RNC
+    if (!validarRNC(rnc)) {
+        return res.render('proveedores/edit', {
+            proveedor: { id: req.params.id, nombre_comercial, rnc, fecha_registro, state },
+            rncError: 'RNC inválido'
+        });
     }
-    const query = 'UPDATE Proveedores SET nombre_comercial = ?, rnc = ?, fecha_registro = ?, state = ? WHERE id = ?';
-    db.run(query, [nombre_comercial, rnc, fecha_registro, state, req.params.id], function (err) {
+
+    // Verificar si el RNC ya existe en otro proveedor
+    const checkQuery = 'SELECT * FROM Proveedores WHERE rnc = ? AND id != ?';
+    db.get(checkQuery, [rnc, req.params.id], (err, row) => {
         if (err) {
             console.error(err.message);
-            res.status(500).send('Error al actualizar el proveedor');
+            res.status(500).send('Error al verificar el RNC');
+        } else if (row) {
+            return res.render('proveedores/edit', {
+                proveedor: { id: req.params.id, nombre_comercial, rnc, fecha_registro, state },
+                rncError: 'El RNC ya existe en otro proveedor'
+            });
         } else {
-            res.redirect('/proveedores');
+            const query = 'UPDATE Proveedores SET nombre_comercial = ?, rnc = ?, fecha_registro = ?, state = ? WHERE id = ?';
+            db.run(query, [nombre_comercial, rnc, fecha_registro, state, req.params.id], function (err) {
+                if (err) {
+                    console.error(err.message);
+                    res.status(500).send('Error al actualizar el proveedor');
+                } else {
+                    res.redirect('/proveedores');
+                }
+            });
         }
     });
 };

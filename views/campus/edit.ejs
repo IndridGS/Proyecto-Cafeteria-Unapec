@@ -24,9 +24,24 @@
         <nav>
             <ul class="menu-principal">
                 <li><a href="/">Inicio</a></li>
-                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
-                <li><a href="/campus">Gestión de Campus</a></li>
-                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
+                <li class="gestion">
+                    <a href="#">Gestión</a>
+                    <ul class="submenu">
+                        <li><a href="/campus">Campus</a></li>
+                        <li><a href="/cafeterias">Cafeterías</a></li>
+                        <li><a href="/tipos-usuarios">Tipos de Usuarios</a></li>
+                        <li><a href="/proveedores">Proveedores</a></li>
+                        <li><a href="/marcas">Marcas</a></li>
+                        <li><a href="/usuarios">Usuarios</a></li>
+                        <li><a href="/empleados">Gestión de Empleados</a></li>
+                        <li><a href="/articulos">Artículos</a></li>
+                    </ul>
+                </li>
+                <li><a href="/ventas">Ventas</a></li>
+                <li><a href="/consultas">Consultas</a></li>
+                <li><a href="/reportes">Reportes</a></li>
+                <li><a href="/auth/logout">Cerrar sesión</a></li>
+
             </ul>
         </nav>
     </header>
@@ -48,6 +63,18 @@
     <footer>
         <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
     </footer>
+    <script src="/js/menu.js"></script>
+    <script>
+        // Mantener visible el submenú de "Gestión" cuando se está en una de sus páginas
+        document.addEventListener('DOMContentLoaded', function() {
+            var gestionLinks = document.querySelectorAll('.gestion .submenu a');
+            gestionLinks.forEach(function(link) {
+                if (link.href === window.location.href) {
+                    link.closest('.gestion').classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

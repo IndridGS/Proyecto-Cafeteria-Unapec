@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Añadir Empleado</title>
     <link rel="stylesheet" href="/css/empleado.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <header>
@@ -12,13 +14,24 @@
         <nav>
             <ul class="menu-principal">
                 <li><a href="/">Inicio</a></li>
-                <!-- <li><a href="/about">Acerca de nosotros</a></li> -->
-                <li><a href="/campus">Gestión de Campus</a></li>
-                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
-                <li><a href="/tipos-usuarios">Gestión de Tipos de Usuarios</a></li>
-                <li><a href="/marcas">Gestión de Marcas</a></li>
-                <li><a href="/usuarios">Gestión de Usuarios</a></li>
-                <li><a href="/empleados">Gestión de Empleados</a></li>
+                <li class="gestion">
+                    <a href="#">Gestión</a>
+                    <ul class="submenu">
+                        <li><a href="/campus">Campus</a></li>
+                        <li><a href="/cafeterias">Cafeterías</a></li>
+                        <li><a href="/tipos-usuarios">Tipos de Usuarios</a></li>
+                        <li><a href="/proveedores">Proveedores</a></li>
+                        <li><a href="/marcas">Marcas</a></li>
+                        <li><a href="/usuarios">Usuarios</a></li>
+                        <li><a href="/empleados">Gestión de Empleados</a></li>
+                        <li><a href="/articulos">Artículos</a></li>
+                    </ul>
+                </li>
+                <li><a href="/ventas">Ventas</a></li>
+                <li><a href="/consultas">Consultas</a></li>
+                <li><a href="/reportes">Reportes</a></li>
+                <li><a href="/auth/logout">Cerrar sesión</a></li>
+
             </ul>
         </nav>
     </header>
@@ -27,33 +40,36 @@
         <form action="/empleados/add" method="post">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre" value="<%= formData ? formData.nombre : '' %>" required>
+                <div class="error-message"><%= errors && errors.nombre ? errors.nombre : '' %></div>
             </div>
             <div class="form-group">
                 <label for="cedula">Cédula:</label>
-                <input type="text" id="cedula" name="cedula" required>
+                <input type="text" id="cedula" name="cedula" value="<%= formData ? formData.cedula : '' %>" required>
+                <div class="error-message"><%= errors && errors.cedula ? errors.cedula : '' %></div>
             </div>
             <div class="form-group">
                 <label for="tanda_labor">Tanda Labor:</label>
                 <select id="tanda_labor" name="tanda_labor" required>
-                    <option value="Matutina">Matutina</option>
-                    <option value="Vespertina">Vespertina</option>
-                    <option value="Nocturna">Nocturna</option>
+                    <option value="Matutina" <%= formData && formData.tanda_labor === 'Matutina' ? 'selected' : '' %>>Matutina</option>
+                    <option value="Vespertina" <%= formData && formData.tanda_labor === 'Vespertina' ? 'selected' : '' %>>Vespertina</option>
+                    <option value="Nocturna" <%= formData && formData.tanda_labor === 'Nocturna' ? 'selected' : '' %>>Nocturna</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="porciento_comision">Porciento Comisión:</label>
-                <input type="number" id="porciento_comision" name="porciento_comision" step="0.01" required>
+                <input type="number" id="porciento_comision" name="porciento_comision" step="0.01" value="<%= formData ? formData.porciento_comision : '' %>" required>
+                <div class="error-message"><%= errors && errors.porciento_comision ? errors.porciento_comision : '' %></div>
             </div>
             <div class="form-group">
                 <label for="fecha_ingreso">Fecha Ingreso:</label>
-                <input type="date" id="fecha_ingreso" name="fecha_ingreso" required>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" value="<%= formData && formData.fecha_ingreso ? formData.fecha_ingreso : new Date().toISOString().split('T')[0] %>" required>
             </div>
             <div class="form-group">
                 <label for="state">Estado:</label>
                 <select id="state" name="state" required>
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
+                    <option value="Activo" <%= formData && formData.state === 'Activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="Inactivo" <%= formData && formData.state === 'Inactivo' ? 'selected' : '' %>>Inactivo</option>
                 </select>
             </div>
             <button type="submit" class="button">Guardar</button>
@@ -118,6 +134,18 @@
                     error.remove();
                 }
             }
+        });
+    </script>
+    <script src="/js/menu.js"></script>
+    <script>
+        // Mantener visible el submenú de "Gestión" cuando se está en una de sus páginas
+        document.addEventListener('DOMContentLoaded', function() {
+            var gestionLinks = document.querySelectorAll('.gestion .submenu a');
+            gestionLinks.forEach(function(link) {
+                if (link.href === window.location.href) {
+                    link.closest('.gestion').classList.add('active');
+                }
+            });
         });
     </script>
 </body>

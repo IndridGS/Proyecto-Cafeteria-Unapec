@@ -13,8 +13,7 @@
         <nav>
             <ul class="menu-principal">
                 <li><a href="/">Inicio</a></li>
-                <!-- <li><a href="/about">Acerca de nosotros</a></li>
-                <li> -->
+                <li class="gestion">
                     <a href="#">Gestión</a>
                     <ul class="submenu">
                         <li><a href="/campus">Campus</a></li>
@@ -23,8 +22,14 @@
                         <li><a href="/proveedores">Proveedores</a></li>
                         <li><a href="/marcas">Marcas</a></li>
                         <li><a href="/usuarios">Usuarios</a></li>
+                        <li><a href="/empleados">Gestión de Empleados</a></li>
+                        <li><a href="/articulos">Artículos</a></li>
                     </ul>
                 </li>
+                <li><a href="/ventas">Ventas</a></li>
+                <li><a href="/consultas">Consultas</a></li>
+                <li><a href="/reportes">Reportes</a></li>
+                <li><a href="/auth/logout">Cerrar sesión</a></li>
             </ul>
         </nav>
     </header>
@@ -34,11 +39,12 @@
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" value="<%= usuario.nombre %>" required>
-                <span class="error-message" id="nombreError"></span>
+                <span class="error-message" id="nombreError"><%= typeof errors !== 'undefined' ? errors.nombre : '' %></span>
             </div>
             <div class="form-group">
                 <label for="cedula">Cédula:</label>
                 <input type="text" id="cedula" name="cedula" value="<%= usuario.cedula %>" required>
+                <span class="error-message" id="cedulaError"><%= typeof errors !== 'undefined' ? errors.cedula : '' %></span>
             </div>
             <div class="form-group">
                 <label for="tipo_usuario_id">Tipo de Usuario:</label>
@@ -47,14 +53,17 @@
                         <option value="<%= tipo.id %>" <%= usuario.tipo_usuario_id === tipo.id ? 'selected' : '' %>><%= tipo.description %></option>
                     <% }) %>
                 </select>
+                <span class="error-message" id="tipoUsuarioError"><%= typeof errors !== 'undefined' ? errors.tipo_usuario_id : '' %></span>
             </div>
             <div class="form-group">
                 <label for="limite_credito">Límite de Crédito:</label>
                 <input type="number" id="limite_credito" name="limite_credito" value="<%= usuario.limite_credito %>" required>
+                <span class="error-message" id="limiteCreditoError"><%= typeof errors !== 'undefined' ? errors.limite_credito : '' %></span>
             </div>
             <div class="form-group">
                 <label for="fecha_registro">Fecha de Registro:</label>
                 <input type="date" id="fecha_registro" name="fecha_registro" value="<%= usuario.fecha_registro %>" required>
+                <span class="error-message" id="fechaRegistroError"><%= typeof errors !== 'undefined' ? errors.fecha_registro : '' %></span>
             </div>
             <div class="form-group">
                 <label for="state">Estado:</label>
@@ -74,6 +83,12 @@
             var isValid = true;
             var nombre = document.getElementById('nombre').value;
             var nombreError = document.getElementById('nombreError');
+            var cedula = document.getElementById('cedula').value;
+            var cedulaError = document.getElementById('cedulaError');
+            var limiteCredito = document.getElementById('limite_credito').value;
+            var limiteCreditoError = document.getElementById('limiteCreditoError');
+            var fechaRegistro = document.getElementById('fecha_registro').value;
+            var fechaRegistroError = document.getElementById('fechaRegistroError');
 
             // Validación de nombre (solo letras y espacios)
             if (!/^[a-zA-Z\s]+$/.test(nombre)) {
@@ -83,10 +98,47 @@
                 nombreError.textContent = '';
             }
 
+            // Validación de cédula (formato 000-0000000-0)
+            if (!/^\d{3}-\d{7}-\d{1}$/.test(cedula)) {
+                cedulaError.textContent = 'Cédula inválida, debe seguir el formato 000-0000000-0';
+                isValid = false;
+            } else {
+                cedulaError.textContent = '';
+            }
+
+            // Validación de límite de crédito (debe ser un número positivo)
+            if (parseFloat(limiteCredito) <= 0) {
+                limiteCreditoError.textContent = 'El límite de crédito debe ser un número positivo';
+                isValid = false;
+            } else {
+                limiteCreditoError.textContent = '';
+            }
+
+            // Validación de fecha de registro (debe tener el formato AAAA-MM-DD)
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaRegistro)) {
+                fechaRegistroError.textContent = 'Fecha de registro inválida';
+                isValid = false;
+            } else {
+                fechaRegistroError.textContent = '';
+            }
+
             // Evitar el envío del formulario si hay errores
             if (!isValid) {
                 event.preventDefault();
             }
+        });
+    </script>
+    
+    <script src="/js/menu.js"></script>
+    <script>
+        // Mantener visible el submenú de "Gestión" cuando se está en una de sus páginas
+        document.addEventListener('DOMContentLoaded', function() {
+            var gestionLinks = document.querySelectorAll('.gestion .submenu a');
+            gestionLinks.forEach(function(link) {
+                if (link.href === window.location.href) {
+                    link.closest('.gestion').classList.add('active');
+                }
+            });
         });
     </script>
 </body>

@@ -67,6 +67,7 @@ nav ul.menu-principal li ul.submenu li:hover {
 main {
     padding: 20px;
     text-align: center;
+    margin-bottom: 70px;  /* Asegura espacio para el footer */
 }
 
 h2.welcome-text {
@@ -134,3 +135,4 @@ footer {
     margin-top: 5px;
     display: block;
 }
+

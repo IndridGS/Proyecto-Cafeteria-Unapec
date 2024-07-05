@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Sistema de Cafetería UNAPEC</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+    <header>Sistema de Cafetería UNAPEC</header>
+    <div class="login-container">
+        <div class="login-header">
+            <img src="/images/avatar.jpg" alt="Avatar">
+            <h2>Login</h2>
+        </div>
+        <% if (error) { %>
+            <div class="error-message"><%= error %></div>
+        <% } %>
+        <form action="/auth/login" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <footer>© 2024 Sistema de Cafetería UNAPEC</footer>
+</body>
+</html>

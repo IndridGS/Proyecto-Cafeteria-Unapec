@@ -48,7 +48,7 @@ footer {
 }
 
 .form-group input[type="submit"] {
-    background-color: #28a745;
+    background-color: #0056b3;
     color: white;
     border: none;
     cursor: pointer;
@@ -56,5 +56,5 @@ footer {
 }
 
 .form-group input[type="submit"]:hover {
-    background-color: #218838;
+    background-color: #0056b3;
 }

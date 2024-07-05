@@ -13,37 +13,50 @@
         <nav>
             <ul class="menu-principal">
                 <li><a href="/">Inicio</a></li>
-                <li><a href="/about">Acerca de nosotros</a></li>
-                <li><a href="/campus">Gestión de Campus</a></li>
-                <li><a href="/cafeterias">Gestión de Cafeterías</a></li>
-                <li><a href="/tipos-usuarios">Gestión de Tipos de Usuarios</a></li>
-                <li><a href="/proveedores">Gestión de Proveedores</a></li>
+                <li class="gestion">
+                    <a href="#">Gestión</a>
+                    <ul class="submenu">
+                        <li><a href="/campus">Campus</a></li>
+                        <li><a href="/cafeterias">Cafeterías</a></li>
+                        <li><a href="/tipos-usuarios">Tipos de Usuarios</a></li>
+                        <li><a href="/proveedores">Proveedores</a></li>
+                        <li><a href="/marcas">Marcas</a></li>
+                        <li><a href="/usuarios">Usuarios</a></li>
+                        <li><a href="/empleados">Gestión de Empleados</a></li>
+                        <li><a href="/articulos">Artículos</a></li>
+                    </ul>
+                </li>
+                <li><a href="/ventas">Ventas</a></li>
+                <li><a href="/consultas">Consultas</a></li>
+                <li><a href="/reportes">Reportes</a></li>
+                <li><a href="/auth/logout">Cerrar sesión</a></li>
+
             </ul>
         </nav>
     </header>
     <main>
         <h2>Añadir Proveedor</h2>
-        <form id="addProveedorForm" action="/proveedores/add" method="post" onsubmit="return validateForm()">
+        <form id="addProveedorForm" action="/proveedores/add" method="post">
             <div class="form-group">
                 <label for="nombre_comercial">Nombre Comercial:</label>
-                <input type="text" id="nombre_comercial" name="nombre_comercial" required>
+                <input type="text" id="nombre_comercial" name="nombre_comercial" value="<%= proveedor.nombre_comercial %>" required>
                 <div id="nombre_comercial_error" class="error-message"></div>
             </div>
             <div class="form-group">
                 <label for="rnc">RNC:</label>
-                <input type="text" id="rnc" name="rnc" required>
-                <div id="rnc_error" class="error-message"></div>
+                <input type="text" id="rnc" name="rnc" value="<%= proveedor.rnc %>" required>
+                <div id="rnc_error" class="error-message"><%= rncError ? rncError : '' %></div>
             </div>
             <div class="form-group">
                 <label for="fecha_registro">Fecha de Registro:</label>
-                <input type="date" id="fecha_registro" name="fecha_registro" required>
+                <input type="date" id="fecha_registro" name="fecha_registro" value="<%= proveedor.fecha_registro || new Date().toISOString().split('T')[0] %>" required>
                 <div id="fecha_registro_error" class="error-message"></div>
             </div>
             <div class="form-group">
                 <label for="state">Estado:</label>
                 <select id="state" name="state" required>
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
+                    <option value="Activo" <%= proveedor.state === 'Activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="Inactivo" <%= proveedor.state === 'Inactivo' ? 'selected' : '' %>>Inactivo</option>
                 </select>
                 <div id="state_error" class="error-message"></div>
             </div>
@@ -53,21 +66,17 @@
     <footer>
         <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
     </footer>
-    <script>
-        function validateForm() {
-            let isValid = true;
-            const rnc = document.getElementById('rnc').value;
-            const rncError = document.getElementById('rnc_error');
-
-            if (!/^\d{9}$/.test(rnc)) {
-                rncError.textContent = 'RNC inválido, debe contener 9 números';
-                isValid = false;
-            } else {
-                rncError.textContent = '';
-            }
-
-            return isValid;
-        }
-    </script>
+      <script src="/js/menu.js"></script>
+      <script>
+          // Mantener visible el submenú de "Gestión" cuando se está en una de sus páginas
+          document.addEventListener('DOMContentLoaded', function() {
+              var gestionLinks = document.querySelectorAll('.gestion .submenu a');
+              gestionLinks.forEach(function(link) {
+                  if (link.href === window.location.href) {
+                      link.closest('.gestion').classList.add('active');
+                  }
+              });
+          });
+      </script>
 </body>
 </html>

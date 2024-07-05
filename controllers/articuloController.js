@@ -1,9 +1,13 @@
-// controllers/articuloController.js
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db/cafeteria.db');
 
 exports.listArticulos = (req, res) => {
-    const query = 'SELECT * FROM Articulos';
+    const query = `
+        SELECT a.id, a.description, m.description AS marca, a.costo, p.nombre_comercial AS proveedor, a.existencia, a.state
+        FROM Articulos a
+        JOIN Marcas m ON a.marca_id = m.id
+        JOIN Proveedores p ON a.proveedor_id = p.id
+    `;
     db.all(query, [], (err, rows) => {
         if (err) {
             console.error(err.message);
@@ -30,7 +34,9 @@ exports.showAddArticuloForm = (req, res) => {
                 } else {
                     res.render('articulos/add', {
                         marcas: marcas,
-                        proveedores: proveedores
+                        proveedores: proveedores,
+                        articulo: {},
+                        errors: {}
                     });
                 }
             });
@@ -40,15 +46,53 @@ exports.showAddArticuloForm = (req, res) => {
 
 exports.addArticulo = (req, res) => {
     const { description, marca_id, costo, proveedor_id, existencia, state } = req.body;
-    const query = 'INSERT INTO Articulos (description, marca_id, costo, proveedor_id, existencia, state) VALUES (?, ?, ?, ?, ?, ?)';
-    db.run(query, [description, marca_id, costo, proveedor_id, existencia, state], function (err) {
-        if (err) {
-            console.error(err.message);
-            res.status(500).send('Error al añadir el artículo');
-        } else {
-            res.redirect('/articulos');
-        }
-    });
+
+    // Validar datos
+    let errors = {};
+    if (costo <= 0) {
+        errors.costo = 'El costo debe ser un número positivo.';
+    }
+    if (existencia <= 0) {
+        errors.existencia = 'La existencia debe ser un número positivo.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+        // Si hay un error, renderizamos la vista con el mensaje de error y los datos ingresados
+        const marcasQuery = 'SELECT * FROM Marcas WHERE state = "Activo"';
+        const proveedoresQuery = 'SELECT * FROM Proveedores WHERE state = "Activo"';
+
+        db.all(marcasQuery, [], (err, marcas) => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).send('Error al obtener las marcas');
+            } else {
+                db.all(proveedoresQuery, [], (err, proveedores) => {
+                    if (err) {
+                        console.error(err.message);
+                        res.status(500).send('Error al obtener los proveedores');
+                    } else {
+                        res.render('articulos/add', {
+                            marcas: marcas,
+                            proveedores: proveedores,
+                            articulo: req.body,
+                            errors: errors
+                        });
+                    }
+                });
+            }
+        });
+    } else {
+        // Si no hay errores, continuamos con la creación del artículo
+        const query = 'INSERT INTO Articulos (description, marca_id, costo, proveedor_id, existencia, state) VALUES (?, ?, ?, ?, ?, ?)';
+        db.run(query, [description, marca_id, costo, proveedor_id, existencia, state], function (err) {
+            if (err) {
+                console.error(err.message);
+                res.status(500).send('Error al añadir el artículo');
+            } else {
+                res.redirect('/articulos');
+            }
+        });
+    }
 };
 
 exports.showEditArticuloForm = (req, res) => {
@@ -75,7 +119,8 @@ exports.showEditArticuloForm = (req, res) => {
                             res.render('articulos/edit', {
                                 articulo: articulo,
                                 marcas: marcas,
-                                proveedores: proveedores
+                                proveedores: proveedores,
+                                errors: {}
                             });
                         }
                     });

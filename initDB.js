@@ -1,7 +1,49 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./db/cafeteria.db');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+const db = new sqlite3.Database('./db/cafeteria.db', (err) => {
+    if (err) {
+        return console.error(err.message);
+    }
+    console.log('Conectado a la base de datos.');
+});
 
 db.serialize(() => {
+    db.run(`CREATE TABLE IF NOT EXISTS Users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        role TEXT NOT NULL
+    )`);
+
+    // Crear o actualizar el usuario administrador
+    const username = 'admin';
+    const password = 'SecurePass123!'; // Nueva contraseña segura y sencilla
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+        } else {
+            db.run(`INSERT INTO Users (username, password, role) VALUES (?, ?, ?)
+                    ON CONFLICT(username) DO UPDATE SET password=excluded.password, role=excluded.role`, 
+                    [username, hash, 'admin'], (err) => {
+                if (err) {
+                    console.error('Error inserting/updating user:', err);
+                } else {
+                    console.log('Admin user created/updated successfully');
+                }
+
+                // Cerrar la base de datos después de la operación
+                db.close((err) => {
+                    if (err) {
+                        return console.error(err.message);
+                    }
+                    console.log('Base de datos cerrada.');
+                });
+            });
+        }
+    });
+
     db.run(`CREATE TABLE IF NOT EXISTS Campus (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         description TEXT NOT NULL,
@@ -69,11 +111,20 @@ db.serialize(() => {
         FOREIGN KEY (marca_id) REFERENCES Marcas(id),
         FOREIGN KEY (proveedor_id) REFERENCES Proveedores(id)
     )`);
+
+    db.run(`CREATE TABLE IF NOT EXISTS Ventas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        no_factura TEXT NOT NULL,
+        empleado_id INTEGER NOT NULL,
+        articulo_id INTEGER NOT NULL,
+        usuario_id INTEGER NOT NULL,
+        fecha_venta DATE NOT NULL,
+        monto REAL NOT NULL,
+        unidades_vendidas INTEGER NOT NULL,
+        comentario TEXT,
+        estado TEXT NOT NULL,
+        FOREIGN KEY (empleado_id) REFERENCES Empleados(id),
+        FOREIGN KEY (articulo_id) REFERENCES Articulos(id),
+        FOREIGN KEY (usuario_id) REFERENCES Usuarios(id)
+    )`);
 });
-
-db.close();
-console.log('Base de datos inicializada.');
-
-
-
-
