@@ -19,8 +19,8 @@ Este proyecto es un sistema de gestión de cafeterías desarrollado para la Univ
 ## Uso
 
 1. Navega a `http://localhost:3000`
-2. Inicia sesión con tus credenciales de administrador.
-3. Administra los artículos, proveedores y usuarios desde el panel de administración.
+2. Inicia sesión con tus credenciales de administrador. Credenciales: Username: admin, Password: SecurePass123!
+4. Administra los artículos, proveedores y usuarios desde el panel de administración.
 
 ## Contribuciones
 
