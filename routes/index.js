@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const VentaModel = require('../models/ventaModel'); 
 
 const ventasController = require('../controllers/ventasController');
 const menuController = require('../controllers/menuController');
@@ -13,8 +14,6 @@ const empleadoController = require('../controllers/empleadoController');
 const articuloController = require('../controllers/articuloController');
 const consultasController = require('../controllers/consultasController');
 
-
-
 // Middleware para verificar si el usuario está autenticado
 function isAuthenticated(req, res, next) {
     if (req.session.user) {
@@ -23,17 +22,33 @@ function isAuthenticated(req, res, next) {
         res.redirect('/auth/login');
     }
 }
-// Ruta para mostrar el formulario de consultas
-router.get('/consultas', (req, res) => {
-    res.render('consultas/consultas');  // Aquí aseguramos de que la vista 'consultas/consultas.ejs' exista
+
+router.get('/ventas/articulo/:id', ventasController.getVentasByArticuloId);
+
+// Ruta para verificar si hay ventas asociadas a un artículo
+router.get('/articulos/:id/check-ventas', (req, res) => {
+    const articuloId = req.params.id;
+    VentaModel.getVentasByArticuloId(articuloId, (err, ventas) => {
+        if (err) {
+            return res.status(500).send('Error al verificar ventas');
+        }
+        const hasVentas = ventas.length > 0;
+        res.json({ hasVentas });
+    });
 });
 
+
+// Ruta para mostrar el formulario de consultas
+router.get('/consultas', (req, res) => {
+    res.render('consultas/consultas');  // Para asegurar de que la vista 'consultas/consultas.ejs' exista
+});
+
+// función para obtener la existencia del artículo
+router.get('/getExistenciaArticulo/:id', isAuthenticated, articuloController.getExistenciaArticulo);
 
 
 // Ruta para realizar la consulta de ventas
 router.get('/consultas/ventas', consultasController.consultarVentas);
-
-
 
 // Ruta para la búsqueda de ventas
 router.get('/consultas/ventas', isAuthenticated, consultasController.consultarVentas);
@@ -48,6 +63,7 @@ router.post('/ventas/add', isAuthenticated, ventasController.addVenta);
 router.get('/ventas/edit/:id', isAuthenticated, ventasController.showEditVentaForm);
 router.post('/ventas/edit/:id', isAuthenticated, ventasController.editVenta);
 router.get('/ventas/delete/:id', isAuthenticated, ventasController.deleteVenta);
+router.get('/getCostoArticulo/:id', isAuthenticated, ventasController.getCostoArticulo);
 
 // Rutas para la gestión de campus
 router.get('/campus', isAuthenticated, campusController.listCampuses);

@@ -30,7 +30,6 @@
                 <li><a href="/consultas">Consultas</a></li>
                 <li><a href="/reportes">Reportes</a></li>
                 <li><a href="/auth/logout">Cerrar sesión</a></li>
-
             </ul>
         </nav>
     </header>
@@ -101,18 +100,18 @@
             return isValid;
         }
     </script>
-      <script src="/js/menu.js"></script>
-      <script>
-          // Mantener visible el submenú de "Gestión" cuando se está en una de sus páginas
-          document.addEventListener('DOMContentLoaded', function() {
-              var gestionLinks = document.querySelectorAll('.gestion .submenu a');
-              gestionLinks.forEach(function(link) {
-                  if (link.href === window.location.href) {
-                      link.closest('.gestion').classList.add('active');
-                  }
-              });
-          });
-      </script>
+    <script src="/js/menu.js"></script>
+    <script>
+        // Mantener visible el submenú de "Gestión" cuando se está en una de sus páginas
+        document.addEventListener('DOMContentLoaded', function() {
+            var gestionLinks = document.querySelectorAll('.gestion .submenu a');
+            gestionLinks.forEach(function(link) {
+                if (link.href === window.location.href) {
+                    link.closest('.gestion').classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

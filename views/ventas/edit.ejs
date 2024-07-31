@@ -6,7 +6,7 @@
     <title>Editar Venta</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/form-styles.css">
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -31,13 +31,13 @@
                 <li><a href="/consultas">Consultas</a></li>
                 <li><a href="/reportes">Reportes</a></li>
                 <li><a href="/auth/logout">Cerrar sesión</a></li>
-
             </ul>
         </nav>
     </header>
     <main>
         <h2>Editar Venta</h2>
-        <form action="/ventas/edit/<%= venta.id %>" method="post">
+        <form id="editVentaForm" action="/ventas/edit/<%= venta.id %>" method="post">
+            <input type="hidden" name="id" value="<%= venta.id %>">
             <div class="form-group">
                 <label for="no_factura">No. Factura:</label>
                 <input type="text" id="no_factura" name="no_factura" value="<%= venta.no_factura %>" required>
@@ -57,6 +57,7 @@
                         <option value="<%= articulo.id %>" <%= articulo.id === venta.articulo_id ? 'selected' : '' %>><%= articulo.description %></option>
                     <% }) %>
                 </select>
+                <input type="hidden" id="existencia" name="existencia">
             </div>
             <div class="form-group">
                 <label for="usuario_id">Usuario:</label>
@@ -77,6 +78,7 @@
             <div class="form-group">
                 <label for="unidades_vendidas">Unidades Vendidas:</label>
                 <input type="number" id="unidades_vendidas" name="unidades_vendidas" value="<%= venta.unidades_vendidas %>" required>
+                <div class="error-message" id="unidades-error" style="color: red;"></div>
             </div>
             <div class="form-group">
                 <label for="comentario">Comentario:</label>
@@ -95,6 +97,50 @@
     <footer>
         <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
     </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#empleado_id').select2();
+            $('#articulo_id').select2();
+            $('#usuario_id').select2();
+
+            // Obtener la existencia del artículo seleccionado y actualizar el campo oculto
+            $('#articulo_id').on('change', function() {
+                const articuloId = $(this).val();
+                if (articuloId) {
+                    $.ajax({
+                        url: '/getExistenciaArticulo/' + articuloId,
+                        method: 'GET',
+                        success: function(response) {
+                            $('#existencia').val(response.existencia);
+                        },
+                        error: function() {
+                            alert('Error al obtener la existencia del artículo');
+                        }
+                    });
+                } else {
+                    $('#existencia').val('');
+                }
+            });
+
+            // Validación en el lado del cliente
+            $('#editVentaForm').on('submit', function(event) {
+                const unidadesVendidas = parseInt($('#unidades_vendidas').val());
+                const existencia = parseInt($('#existencia').val());
+
+                if (unidadesVendidas > existencia) {
+                    event.preventDefault();
+                    $('#unidades-error').text('Las unidades vendidas no pueden exceder la existencia del artículo');
+                } else {
+                    $('#unidades-error').text('');
+                }
+            });
+
+            // Trigger change event to set initial existencia value
+            $('#articulo_id').trigger('change');
+        });
+    </script>
     <script src="/js/menu.js"></script>
     <script>
         // Mantener visible el submenú de "Gestión" cuando se está en una de sus páginas
@@ -109,5 +155,3 @@
     </script>
 </body>
 </html>
-
-    
