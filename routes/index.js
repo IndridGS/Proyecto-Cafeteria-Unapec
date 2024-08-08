@@ -22,7 +22,6 @@ function isAuthenticated(req, res, next) {
         res.redirect('/auth/login');
     }
 }
-
 router.get('/ventas/articulo/:id', ventasController.getVentasByArticuloId);
 
 // Ruta para verificar si hay ventas asociadas a un artículo
@@ -37,26 +36,14 @@ router.get('/articulos/:id/check-ventas', (req, res) => {
     });
 });
 
-
-// Ruta para mostrar el formulario de consultas
-router.get('/consultas', (req, res) => {
-    res.render('consultas/consultas');  // Para asegurar de que la vista 'consultas/consultas.ejs' exista
-});
-
 // función para obtener la existencia del artículo
 router.get('/getExistenciaArticulo/:id', isAuthenticated, articuloController.getExistenciaArticulo);
 
 
-// Ruta para realizar la consulta de ventas
-router.get('/consultas/ventas', consultasController.consultarVentas);
-
-// Ruta para la búsqueda de ventas
-router.get('/consultas/ventas', isAuthenticated, consultasController.consultarVentas);
-
 // Ruta de la página de inicio
 router.get('/', menuController.renderHomePage);
 
-// Rutas protegidas
+// Rutas para la gestión de ventas
 router.get('/ventas', isAuthenticated, ventasController.listVentas);
 router.get('/ventas/add', isAuthenticated, ventasController.showAddVentaForm);
 router.post('/ventas/add', isAuthenticated, ventasController.addVenta);
@@ -64,6 +51,7 @@ router.get('/ventas/edit/:id', isAuthenticated, ventasController.showEditVentaFo
 router.post('/ventas/edit/:id', isAuthenticated, ventasController.editVenta);
 router.get('/ventas/delete/:id', isAuthenticated, ventasController.deleteVenta);
 router.get('/getCostoArticulo/:id', isAuthenticated, ventasController.getCostoArticulo);
+router.get('/ventas/articulo/:id', isAuthenticated, ventasController.getVentasByArticuloId);
 
 // Rutas para la gestión de campus
 router.get('/campus', isAuthenticated, campusController.listCampuses);
@@ -128,5 +116,13 @@ router.post('/articulos/add', isAuthenticated, articuloController.addArticulo);
 router.get('/articulos/edit/:id', isAuthenticated, articuloController.showEditArticuloForm);
 router.post('/articulos/edit/:id', isAuthenticated, articuloController.editArticulo);
 router.get('/articulos/delete/:id', isAuthenticated, articuloController.deleteArticulo);
+
+// Ruta para mostrar el formulario de consultas
+router.get('/consultas', isAuthenticated, consultasController.consultar);
+
+// Ruta para la consulta de datos
+router.get('/consultas/datos', isAuthenticated, consultasController.consultarDatos);
+router.get('/consultas/consultarDatos', isAuthenticated, consultasController.consultarDatos);
+router.get('/consultas/reporte', consultasController.generarReporte);
 
 module.exports = router;

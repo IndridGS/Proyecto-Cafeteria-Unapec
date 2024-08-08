@@ -1,10 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Ventas</title>
+    <title>Consulta de Datos</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/consultas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 <body>
     <header>
@@ -12,32 +16,215 @@
         <nav>
             <ul class="menu-principal">
                 <li><a href="/">Inicio</a></li>
-                <li><a href="/consultas">Consulta de Ventas</a></li>
-                <li><a href="/auth/logout">Cerrar sesión</a></li>
+                <li class="gestion">
+                    <a href="#">Gestión</a>
+                    <ul class="submenu">
+                        <li><a href="/campus">Campus</a></li>
+                        <li><a href="/cafeterias">Cafeterías</a></li>
+                        <li><a href="/tipos-usuarios">Tipos de Usuarios</a></li>
+                        <li><a href="/proveedores">Proveedores</a></li>
+                        <li><a href="/marcas">Marcas</a></li>
+                        <li><a href="/usuarios">Usuarios</a></li>
+                        <li><a href="/empleados">Gestión de Empleados</a></li>
+                        <li><a href="/articulos">Artículos</a></li>
+                    </ul>
+                </li>
+                <li><a href="/ventas">Ventas</a></li>
+                <li><a href="/consultas">Consultas</a></li>
+                <!-- <li><a href="/auth/logout">Cerrar sesión</a></li> -->
+                <li><a href="/auth/logout"><i class="fas fa-sign-out-alt"></i></a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <h2>Consulta de Ventas</h2>
-        <form action="/consultas/ventas" method="get">
+    
+        <h2>Consulta de Datos</h2>
+        <form action="/consultas/datos" method="get">
             <div class="form-group">
-                <label for="usuario">Usuario:</label>
-                <input type="text" id="usuario" name="usuario">
+                <label for="tipo">Tipo:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="ventas" <% if (tipo === 'ventas') { %>selected<% } %>>Ventas</option>
+                    <option value="articulos" <% if (tipo === 'articulos') { %>selected<% } %>>Artículos</option>
+                    <option value="usuarios" <% if (tipo === 'usuarios') { %>selected<% } %>>Usuarios</option>
+                    <option value="empleados" <% if (tipo === 'empleados') { %>selected<% } %>>Empleados</option>
+                    <option value="proveedores" <% if (tipo === 'proveedores') { %>selected<% } %>>Proveedores</option>
+                    <option value="cafeterias" <% if (tipo === 'cafeterias') { %>selected<% } %>>Cafeterías</option>
+                    <option value="marcas" <% if (tipo === 'marcas') { %>selected<% } %>>Marcas</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="usuario">Usuario/Descripción:</label>
+                <input type="text" id="usuario" name="usuario" value="<%= usuario %>">
             </div>
             <div class="form-group">
                 <label for="fecha_inicio">Fecha Inicio:</label>
-                <input type="date" id="fecha_inicio" name="fecha_inicio">
+                <input type="date" id="fecha_inicio" name="fecha_inicio" value="<%= fecha_inicio %>">
             </div>
             <div class="form-group">
                 <label for="fecha_fin">Fecha Fin:</label>
-                <input type="date" id="fecha_fin" name="fecha_fin">
+                <input type="date" id="fecha_fin" name="fecha_fin" value="<%= fecha_fin %>">
             </div>
+            <div class="form-group">
+                <label for="estado">Estado:</label>
+                <select id="estado" name="estado">
+                    <option value="" <% if (estado === '') { %>selected<% } %>>Cualquiera</option>
+                    <option value="Activo" <% if (estado === 'Activo') { %>selected<% } %>>Activo</option>
+                    <option value="Inactivo" <% if (estado === 'Inactivo') { %>selected<% } %>>Inactivo</option>
+                </select>
+            </div>
+            <div class="button-group">
             <button type="submit" class="button">Buscar</button>
+            <button type="button" class="button" id="generate-report">Generar Reporte</button>
+            </div>
+            
         </form>
+   
+
+        <% if (datos && datos.length > 0) { %>
+            <table>
+                <thead>
+                    <% if (tipo === 'ventas') { %>
+                        <tr>
+                            <th>Factura</th>
+                            <th>Usuario</th>
+                            <th>Empleado</th>
+                            <th>Artículo</th>
+                            <th>Fecha Venta</th>
+                            <th>Cantidad Vendida</th>
+                            <th>Monto</th>
+                            <th>Comentario</th>
+                            <th>Estado</th>
+                        </tr>
+                    <% } else if (tipo === 'articulos') { %>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descripción</th>
+                            <th>Costo</th>
+                            <th>Existencia</th>
+                            <th>Estado</th>
+                        </tr>
+                    <% } else if (tipo === 'usuarios') { %>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Cédula</th>
+                            <th>Tipo de Usuario</th>
+                            <th>Límite de Crédito</th>
+                            <th>Fecha de Registro</th>
+                            <th>Estado</th>
+                        </tr>
+                    <% } else if (tipo === 'empleados') { %>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Cédula</th>
+                            <th>Tanda Labor</th>
+                            <th>Porciento Comisión</th>
+                            <th>Fecha de Ingreso</th>
+                            <th>Estado</th>
+                        </tr>
+                    <% } else if (tipo === 'proveedores') { %>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Comercial</th>
+                            <th>RNC</th>
+                            <th>Fecha de Registro</th>
+                            <th>Estado</th>
+                        </tr>
+                    <% } else if (tipo === 'cafeterias') { %>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descripción</th>
+                            <th>Campus</th>
+                            <th>Encargado</th>
+                            <th>Estado</th>
+                        </tr>
+                    <% } else if (tipo === 'marcas') { %>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                        </tr>
+                    <% } %>
+                </thead>
+                <tbody>
+                    <% datos.forEach(dato => { %>
+                        <tr>
+                            <% if (tipo === 'ventas') { %>
+                                <td><%= dato.factura %></td>
+                                <td><%= dato.usuario %></td>
+                                <td><%= dato.empleado %></td>
+                                <td><%= dato.articulo %></td>
+                                <td><%= dato.fecha_venta %></td>
+                                <td><%= dato.unidades_vendidas %></td>
+                                <td><%= dato.monto %></td>
+                                <td><%= dato.comentario %></td>
+                                <td><%= dato.estado %></td>
+                            <% } else if (tipo === 'articulos') { %>
+                                <td><%= dato.id %></td>
+                                <td><%= dato.description %></td>
+                                <td><%= dato.costo %></td>
+                                <td><%= dato.existencia %></td>
+                                <td><%= dato.state %></td>
+                            <% } else if (tipo === 'usuarios') { %>
+                                <td><%= dato.id %></td>
+                                <td><%= dato.nombre %></td>
+                                <td><%= dato.cedula %></td>
+                                <td><%= dato.tipo_usuario %></td>
+                                <td><%= dato.limite_credito %></td>
+                                <td><%= dato.fecha_registro %></td>
+                                <td><%= dato.estado %></td>
+                            <% } else if (tipo === 'empleados') { %>
+                                <td><%= dato.id %></td>
+                                <td><%= dato.nombre %></td>
+                                <td><%= dato.cedula %></td>
+                                <td><%= dato.tanda_labor %></td>
+                                <td><%= dato.porciento_comision %></td>
+                                <td><%= dato.fecha_ingreso %></td>
+                                <td><%= dato.estado %></td>
+                            <% } else if (tipo === 'proveedores') { %>
+                                <td><%= dato.id %></td>
+                                <td><%= dato.nombre_comercial %></td>
+                                <td><%= dato.rnc %></td>
+                                <td><%= dato.fecha_registro %></td>
+                                <td><%= dato.estado %></td>
+                            <% } else if (tipo === 'cafeterias') { %>
+                                <td><%= dato.id %></td>
+                                <td><%= dato.descripcion %></td>
+                                <td><%= dato.campus_id %></td>
+                                <td><%= dato.encargado %></td>
+                                <td><%= dato.estado %></td>
+                            <% } else if (tipo === 'marcas') { %>
+                                <td><%= dato.id %></td>
+                                <td><%= dato.descripcion %></td>
+                                <td><%= dato.estado %></td>
+                            <% } %>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <% if (tipo === 'ventas') { %>
+                <p>Total de Ventas: <%= total %></p>
+            <% } %>
+        <% } else { %>
+            <p>No se encontraron datos.</p>
+        <% } %>
     </main>
     <footer>
         <p>&copy; 2024 Sistema de Cafetería UNAPEC</p>
     </footer>
     <script src="/js/menu.js"></script>
+    <script>
+        document.getElementById('generate-report').addEventListener('click', function() {
+            const params = new URLSearchParams({
+                tipo: document.getElementById('tipo').value,
+                usuario: document.getElementById('usuario').value,
+                fecha_inicio: document.getElementById('fecha_inicio').value,
+                fecha_fin: document.getElementById('fecha_fin').value,
+                estado: document.getElementById('estado').value
+            });
+            window.location.href = `/consultas/reporte?${params.toString()}`;
+        });
+    </script>
 </body>
 </html>

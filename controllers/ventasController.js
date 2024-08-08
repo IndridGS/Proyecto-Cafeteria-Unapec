@@ -248,3 +248,5 @@ exports.getVentasByArticuloId = (req, res) => {
         res.json({ ventas });
     });
 };
+
+

@@ -1,3 +1,5 @@
+// CONTROLADOR DE ARTICULOS
+
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db/cafeteria.db');
 const ArticuloModel = require('../models/articuloModel'); // ESTO ES PARA QUE SE PUEDA USAR EL MODELO DE ARTICULOS
@@ -158,20 +160,7 @@ exports.deleteArticulo = (req, res) => {
         }
     });
 };
-// exports.deleteArticulo = (req, res) => {
-//     const query = 'DELETE FROM Articulos WHERE id = ?';
-//     db.run(query, [req.params.id], function (err) {
-//         if (err) {
-//             console.error(err.message);
-//             res.status(500).send('Error al eliminar el artículo');
-//         } else {
-//             res.redirect('/articulos');
-//         }
-//     });
-// };
 
-
-// Obtener la existencia de un artículo por su ID
 // Obtener la existencia de un artículo por su ID
 exports.getExistenciaArticulo = (req, res) => {
     const articulo_id = req.params.id;
@@ -183,3 +172,4 @@ exports.getExistenciaArticulo = (req, res) => {
         res.json({ existencia: articulo.existencia });
     });
 };
+
