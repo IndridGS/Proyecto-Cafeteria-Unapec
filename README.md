@@ -1,6 +1,6 @@
 # Sistema de Gestión de Cafetería UNAPEC
 
-Este proyecto es un sistema de gestión de cafeterías desarrollado para la Universidad APEC. Permite la administración de artículos, proveedores, ventas, usuarios y más.
+Esto es un proyecto universitario basico de una aplicacion web de gestión de cafeterías desarrollado para la Universidad APEC. Permite la administración de artículos, proveedores, ventas, usuarios y más.
 
 ## Tecnologías Utilizadas
 
